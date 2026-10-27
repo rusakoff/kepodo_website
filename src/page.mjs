@@ -61,12 +61,20 @@ export function page(c,siteUrl='') {
 </div><nav class="mobile-nav container" id="mobile-nav" aria-label="${c.lang==='en'?'Mobile navigation':'Мобильная навигация'}" hidden>${c.nav.map((s,i)=>`<a href="#${['features','how-it-works','models'][i]}">${e(s)}</a>`).join('')}<a href="#get-started">${e(c.get)} ${icon('arrow-up-right')}</a></nav></header>
 <main id="main">
   <section class="hero">
-    <div class="hero-art" aria-hidden="true"><img src="${e(local('/assets/hero-collage.webp'))}" srcset="${e(local('/assets/hero-collage-960.webp'))} 960w, ${e(local('/assets/hero-collage.webp'))} 1774w" sizes="(max-width: 900px) 180vw, 90vw" alt="" width="1774" height="887" fetchpriority="high" decoding="async"></div>
-    <div class="hero-inner container"><div class="hero-copy"><p class="eyebrow hero-eyebrow"><span class="tiny-spark" aria-hidden="true">✳</span>${e(c.eyebrow)}</p>
-    <h1>${e(c.headline[0])}<br><span>${e(c.headline[1])}</span></h1>
-    <p class="hero-description">${e(c.intro)}</p>
-    <div class="hero-actions"><a href="#tour" class="button">${e(c.primary)}${icon('arrow')}</a><a href="${repo}" ${ext} class="text-link">${e(c.secondary)}${icon('arrow-up-right')}</a></div>
-    <div class="hero-meta"><span>${icon('monitor')}${e(c.platform)}</span><span>${icon('file')}${e(c.format)}</span></div></div></div>
+    <div class="hero-inner container">
+      <div class="hero-copy"><p class="eyebrow hero-eyebrow"><span class="tiny-spark" aria-hidden="true">✳</span>${e(c.eyebrow)}</p>
+        <h1>${e(c.headline[0])}<br><span>${e(c.headline[1])}</span></h1>
+        <p class="hero-description">${e(c.intro)}</p>
+        <div class="hero-actions"><a href="#tour" class="button">${e(c.primary)}${icon('arrow')}</a><a href="${repo}" ${ext} class="text-link">${e(c.secondary)}${icon('arrow-up-right')}</a></div>
+        <div class="hero-meta"><span>${icon('monitor')}${e(c.platform)}</span><span>${icon('file')}${e(c.format)}</span></div>
+      </div>
+      <div class="hero-collage" aria-hidden="true">
+        <img class="clipping clipping-japanese" src="${e(local('/assets/hero-newspaper-jp.webp'))}" alt="" width="512" height="1281" decoding="async">
+        <img class="clipping clipping-french" src="${e(local('/assets/hero-newspaper-fr.webp'))}" alt="" width="1320" height="852" fetchpriority="high" decoding="async">
+        <div class="collage-note"><span class="note-label">${c.lang==='en'?'A note to self':'На полях'}</span><p>${c.lang==='en'?'What connects<br><span>these ideas?</span>':'Что связывает<br><span>эти идеи?</span>'}</p></div>
+        <span class="collage-caption">${c.lang==='en'?'Follow your curiosity.':'Следуйте за любопытством.'}</span>
+      </div>
+    </div>
   </section>
 
   <section id="tour" class="tour container" aria-label="${e(c.tourLabel)}" data-tabs>
