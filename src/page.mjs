@@ -43,43 +43,47 @@ export function page(c,siteUrl='') {
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${e(c.title)}</title><meta name="description" content="${e(c.description)}">
-  <meta name="theme-color" content="#f0efec"><meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#f8eee8"><meta name="color-scheme" content="light">
   <link rel="canonical" href="${e(siteUrl+localeHref(c.lang))}">
   <link rel="alternate" hreflang="en" href="${e(siteUrl+'/en/')}"><link rel="alternate" hreflang="ru" href="${e(siteUrl+'/ru/')}"><link rel="alternate" hreflang="x-default" href="${e(siteUrl+'/en/')}">
   <meta property="og:type" content="website"><meta property="og:site_name" content="kepodo"><meta property="og:title" content="${e(c.title)}"><meta property="og:description" content="${e(c.description)}"><meta property="og:locale" content="${c.locale}">
   <meta property="og:image" content="${e(siteUrl+'/assets/og-'+c.lang+'.png')}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="${e(c.title)}">
   ${siteUrl?`<meta property="og:url" content="${e(siteUrl+localeHref(c.lang))}">`:''}<meta name="twitter:card" content="summary_large_image">
   <link rel="icon" type="image/png" href="${e(local('/favicon.png'))}"><link rel="preload" href="${e(local('/assets/fonts/Manrope-Variable.ttf'))}" as="font" type="font/ttf" crossorigin>
-  <link rel="stylesheet" href="${e(local('/styles.css'))}"><script src="${e(local('/main.js'))}" defer></script>
+  <link rel="preload" href="${e(local('/assets/fonts/Unbounded-Variable.ttf'))}" as="font" type="font/ttf" crossorigin><link rel="stylesheet" href="${e(local('/styles.css'))}"><script src="${e(local('/main.js'))}" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main">${e(c.skip)}</a>
 <header class="site-header"><div class="container header-inner">
-  <a class="brand" href="${e(local(localeHref(c.lang)))}" aria-label="kepodo"><img src="${e(local('/assets/wordmark.png'))}" width="121" height="33" alt="kepodo"></a>
+  <a class="brand" href="${e(local(localeHref(c.lang)))}" aria-label="kepodo"><span class="brand-word">kepodo<span class="brand-dot">✳</span></span></a>
   <nav class="desktop-nav" aria-label="${c.lang==='en'?'Main navigation':'Основная навигация'}">${c.nav.map((s,i)=>`<a href="#${['features','how-it-works','models'][i]}">${e(s)}</a>`).join('')}</nav>
   <div class="header-end"><div class="language-switch" aria-label="${c.lang==='en'?'Language':'Язык'}"><a href="${e(local(localeHref('en')))}" lang="en" hreflang="en" ${c.lang==='en'?'aria-current="page"':''}>EN</a><span aria-hidden="true">/</span><a href="${e(local(localeHref('ru')))}" lang="ru" hreflang="ru" ${c.lang==='ru'?'aria-current="page"':''}>RU</a></div><a class="button button-small header-cta" href="#get-started">${e(c.get)}${icon('arrow-up-right')}</a><button class="menu-toggle icon-button" aria-label="${e(c.menu)}" aria-expanded="false" aria-controls="mobile-nav" data-open-label="${e(c.menu)}" data-close-label="${e(c.closeMenu)}">${icon('menu')}</button></div>
 </div><nav class="mobile-nav container" id="mobile-nav" aria-label="${c.lang==='en'?'Mobile navigation':'Мобильная навигация'}" hidden>${c.nav.map((s,i)=>`<a href="#${['features','how-it-works','models'][i]}">${e(s)}</a>`).join('')}<a href="#get-started">${e(c.get)} ${icon('arrow-up-right')}</a></nav></header>
 <main id="main">
   <section class="hero">
     <div class="hero-inner container">
-      <div class="hero-copy"><p class="eyebrow hero-eyebrow"><span class="tiny-spark" aria-hidden="true">✳</span>${e(c.eyebrow)}</p>
-        <h1>${e(c.headline[0])}<br><span>${e(c.headline[1])}</span></h1>
-        <p class="hero-description">${e(c.intro)}</p>
-        <div class="hero-actions"><a href="#tour" class="button">${e(c.primary)}${icon('arrow')}</a><a href="${repo}" ${ext} class="text-link">${e(c.secondary)}${icon('arrow-up-right')}</a></div>
-        <div class="hero-meta"><span>${icon('monitor')}${e(c.platform)}</span><span>${icon('file')}${e(c.format)}</span></div>
+      <p class="eyebrow hero-eyebrow">${e(c.eyebrow)}</p>
+      <div class="hero-title-wrap">
+        <h1><span class="headline-line">${e(c.headline[0])}</span><span class="headline-line">${e(c.headline[1])}</span></h1>
+        <span class="sticker sticker-left">${e(c.heroStickers[0])}</span><span class="sticker sticker-right">${e(c.heroStickers[1])}</span>
       </div>
-      <div class="hero-collage" aria-hidden="true">
-        <img class="clipping clipping-japanese" src="${e(local('/assets/hero-newspaper-jp.webp'))}" alt="" width="512" height="1281" decoding="async">
-        <img class="clipping clipping-french" src="${e(local('/assets/hero-newspaper-fr.webp'))}" alt="" width="1320" height="852" fetchpriority="high" decoding="async">
-        <div class="collage-note"><span class="note-label">${c.lang==='en'?'A note to self':'На полях'}</span><p>${c.lang==='en'?'What connects<br><span>these ideas?</span>':'Что связывает<br><span>эти идеи?</span>'}</p></div>
-        <span class="collage-caption">${c.lang==='en'?'Follow your curiosity.':'Следуйте за любопытством.'}</span>
+      <div class="hero-scene" aria-hidden="true">
+        <svg class="scene-swoop swoop-left" viewBox="0 0 190 240" fill="none"><path d="M-45 42C36-12 160 54 135 126 118 173 12 148 19 97 28 31 163 140 133 231" stroke="currentColor" stroke-width="12" stroke-linecap="round"/></svg>
+        <svg class="scene-swoop swoop-right" viewBox="0 0 190 240" fill="none"><path d="M168 4C54 9 46 140 109 128 163 117 117 38 40 88-7 120 23 184 69 205m-30-4 32 7-6-31" stroke="currentColor" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="thought-paper"><div class="paper-bar">${icon('file')}<span>${e(c.heroDocument)}</span><span>↗</span></div><div class="paper-lines"><i></i><i></i><i class="highlight"></i><i></i><i></i></div><p>${e(c.heroQuestion)}</p><span class="paper-corner">.md</span></div>
+        <div class="companion-wrap"><img class="hero-companion" src="${e(local('/assets/reading-companion.svg'))}" width="460" height="360" alt="" fetchpriority="high"><span class="companion-caption">${e(c.footerNote)}</span></div>
+        <div class="insight-paper"><span class="insight-spark">✳</span><p>${e(c.heroAnswer)}</p><div class="idea-map"><span>${e(c.heroNodes[0])}</span><b>↘</b><span>${e(c.heroNodes[1])}</span><b>↙</b><span>${e(c.heroNodes[2])}</span></div></div>
+        <span class="scene-asterisk">✳</span>
       </div>
+      <div class="hero-bottom"><p class="hero-description">${e(c.intro)}</p><div class="hero-actions"><a href="#tour" class="button">${e(c.primary)}${icon('arrow-up-right')}</a><a href="${repo}" ${ext} class="text-link">${e(c.secondary)}${icon('arrow-up-right')}</a></div><div class="hero-meta"><span>${icon('monitor')}${e(c.platform)}</span><span>${icon('file')}${e(c.format)}</span></div></div>
     </div>
   </section>
+  <div class="ticker" aria-hidden="true"><div class="ticker-track">${[0,1].map(()=>`<span class="ticker-group">${c.ribbon.map(t=>`<span>${e(t)}</span><b>✳</b>`).join('')}</span>`).join('')}</div></div>
+  <section class="manifesto container section-pad"><p class="eyebrow">${e(c.featuresEyebrow)}</p><h2>${e(c.manifesto[0])}<br><span>${e(c.manifesto[1])}</span></h2><p>${e(c.manifestoText)}</p><span class="manifesto-flower" aria-hidden="true">✳</span></section>
 
   <section id="tour" class="tour container" aria-label="${e(c.tourLabel)}" data-tabs>
-    <div class="tour-topline"><p>${e(c.tourLabel)}</p><div class="tour-tabs" role="tablist" aria-label="${e(c.tourLabel)}">${c.tabs.map(t=>`<button role="tab" id="tab-${t.id}" aria-controls="panel-${t.id}" aria-selected="${t.id==='visual'}" tabindex="${t.id==='visual'?'0':'-1'}" data-tab="${t.id}">${icon(t.icon)}${e(t.label)}</button>`).join('')}</div></div>
-    <div class="tour-stage">${c.tabs.map(t=>`<div id="panel-${t.id}" role="tabpanel" aria-labelledby="tab-${t.id}" tabindex="0" ${t.id!=='visual'?'hidden':''}>${screenshot(t.id,t.alt,'tour-shot',t.id==='visual')}<div class="tour-explanation"><h2>${e(t.title)}</h2><p>${e(t.text)}</p></div></div>`).join('')}</div>
+    <div class="section-heading tour-heading"><p class="eyebrow">${e(c.tourEyebrow)}</p><h2>${e(c.tourLabel)}</h2></div><div class="tour-topline"><div class="tour-tabs" role="tablist" aria-label="${e(c.tourLabel)}">${c.tabs.map(t=>`<button role="tab" id="tab-${t.id}" aria-controls="panel-${t.id}" aria-selected="${t.id==='visual'}" tabindex="${t.id==='visual'?'0':'-1'}" data-tab="${t.id}">${icon(t.icon)}${e(t.label)}</button>`).join('')}</div></div>
+    <div class="tour-stage"><div class="window-bar" aria-hidden="true"><span class="window-dots"><i></i><i></i><i></i></span><span>kepodo — ${e(c.heroDocument)}</span><span>Markdown + AI</span></div>${c.tabs.map(t=>`<div id="panel-${t.id}" role="tabpanel" aria-labelledby="tab-${t.id}" tabindex="0" ${t.id!=='visual'?'hidden':''}>${screenshot(t.id,t.alt,'tour-shot',t.id==='visual')}<div class="tour-explanation"><h2>${e(t.title)}</h2><p>${e(t.text)}</p></div></div>`).join('')}</div>
     <p class="screenshot-note">${e(c.screenshotNote)}</p>
     <ul class="conversation-features">${c.conversationFeatures.map(text=>`<li>${icon('check')}${e(text)}</li>`).join('')}</ul>
   </section>
@@ -102,11 +106,11 @@ export function page(c,siteUrl='') {
 
   <section id="how-it-works" class="workflow-section section-pad"><div class="container"><div class="section-heading"><p class="eyebrow">${e(c.workflowEyebrow)}</p><h2>${e(c.workflowTitle)}</h2></div><ol class="workflow-steps">${c.steps.map(s=>`<li><h3>${e(s.title)}</h3><p>${e(s.text)}</p></li>`).join('')}</ol><aside class="privacy-note">${icon('shield')}<div><h3>${e(c.privacyTitle)}</h3><p>${e(c.privacyText)}</p></div></aside></div></section>
 
-  <section class="faq-section container section-pad"><div class="faq-heading"><p class="eyebrow">${e(c.faqEyebrow)}</p><h2>${e(c.faqTitle)}</h2><img class="faq-mascot" src="${e(local('/assets/squid.webp'))}" alt="" width="100" height="84" loading="lazy"></div><div class="faq-list">${c.faq.map((f,i)=>`<details name="faq"><summary>${e(f.q)}${icon('plus')}</summary><div class="faq-answer"><p>${e(f.a)}</p>${i===4?`<a class="text-link" href="${repo}#запуск" ${ext}>${e(c.ctaGuide)}${icon('arrow-up-right')}</a>`:''}</div></details>`).join('')}</div></section>
+  <section class="faq-section container section-pad"><div class="faq-heading"><p class="eyebrow">${e(c.faqEyebrow)}</p><h2>${e(c.faqTitle)}</h2><span class="faq-flower" aria-hidden="true">✳</span></div><div class="faq-list">${c.faq.map((f,i)=>`<details name="faq"><summary>${e(f.q)}${icon('plus')}</summary><div class="faq-answer"><p>${e(f.a)}</p>${i===4?`<a class="text-link" href="${repo}#запуск" ${ext}>${e(c.ctaGuide)}${icon('arrow-up-right')}</a>`:''}</div></details>`).join('')}</div></section>
 
-  <section id="get-started" class="cta-section container"><div class="cta-inner"><p class="eyebrow">${e(c.ctaEyebrow)}</p><h2>${e(c.ctaTitle[0])}<br>${e(c.ctaTitle[1])}</h2><p>${e(c.ctaText)}</p><div class="cta-actions"><a class="button button-light" href="${repo}" ${ext}>${icon('github')}${e(c.ctaButton)}${icon('arrow-up-right')}</a><a class="text-link" href="${repo}#запуск" ${ext}>${e(c.ctaGuide)}${icon('arrow')}</a></div><span class="cta-note">${e(c.ctaNote)}</span><img class="cta-mascot" src="${e(local('/assets/squid.webp'))}" alt="" width="190" height="160" loading="lazy"></div></section>
+  <section id="get-started" class="cta-section"><div class="cta-inner"><p class="eyebrow">${e(c.ctaEyebrow)}</p><h2>${e(c.ctaTitle[0])}<br>${e(c.ctaTitle[1])}</h2><p>${e(c.ctaText)}</p><div class="cta-actions"><a class="button button-light" href="${repo}" ${ext}>${icon('github')}${e(c.ctaButton)}${icon('arrow-up-right')}</a><a class="text-link" href="${repo}#запуск" ${ext}>${e(c.ctaGuide)}${icon('arrow')}</a></div><span class="cta-note">${e(c.ctaNote)}</span><img class="cta-mascot" src="${e(local('/assets/reading-companion.svg'))}" alt="" width="460" height="360" loading="lazy"></div></section>
 </main>
-<footer class="site-footer container"><div class="footer-top"><div><a class="brand" href="${e(local(localeHref(c.lang)))}" aria-label="kepodo"><img src="${e(local('/assets/wordmark.png'))}" alt="kepodo" width="121" height="33" loading="lazy"></a><p>${e(c.footer)}</p></div><nav aria-label="${c.lang==='en'?'Footer links':'Ссылки в подвале'}">${[repo,repo+'#запуск',repo+'/issues'].map((href,i)=>`<a href="${href}" ${ext}>${e(c.footerLinks[i])}${icon('arrow-up-right')}</a>`).join('')}</nav></div><div class="footer-bottom"><span>© ${new Date().getFullYear()} kepodo</span><span>${e(c.footerNote)}</span><div class="language-switch"><a href="${e(local(localeHref('en')))}" lang="en" hreflang="en" ${c.lang==='en'?'aria-current="page"':''}>English</a><span>/</span><a href="${e(local(localeHref('ru')))}" lang="ru" hreflang="ru" ${c.lang==='ru'?'aria-current="page"':''}>Русский</a></div></div></footer>
+<footer class="site-footer"><div class="container"><div class="footer-top"><div><a class="brand" href="${e(local(localeHref(c.lang)))}" aria-label="kepodo"><span class="brand-word">kepodo<span class="brand-dot">✳</span></span></a><p>${e(c.footer)}</p></div><nav aria-label="${c.lang==='en'?'Footer links':'Ссылки в подвале'}">${[repo,repo+'#запуск',repo+'/issues'].map((href,i)=>`<a href="${href}" ${ext}>${e(c.footerLinks[i])}${icon('arrow-up-right')}</a>`).join('')}</nav></div><div class="footer-bottom"><span>© ${new Date().getFullYear()} kepodo</span><span>${e(c.footerNote)}</span><div class="language-switch"><a href="${e(local(localeHref('en')))}" lang="en" hreflang="en" ${c.lang==='en'?'aria-current="page"':''}>English</a><span>/</span><a href="${e(local(localeHref('ru')))}" lang="ru" hreflang="ru" ${c.lang==='ru'?'aria-current="page"':''}>Русский</a></div></div><a class="footer-wordmark" href="#main" aria-label="${c.lang==='en'?'Back to top':'В начало страницы'}">kepodo<span>↗</span></a></div></footer>
 <dialog class="lightbox" aria-label="${e(c.zoom)}"><div class="lightbox-toolbar"><p>${e(c.screenshotNote)}</p><button class="icon-button lightbox-close" aria-label="${e(c.close)}">${icon('x')}</button></div><div class="lightbox-scroll"><img alt="" width="1360" height="900"></div><p class="lightbox-caption"></p></dialog>
 </body></html>`;
 }

@@ -77,3 +77,53 @@ document.querySelectorAll('.language-switch a').forEach(link => {
     link.href = url.href;
   });
 });
+
+// Keep native scrolling; reveal each story once as it enters the viewport.
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+const revealElements = [...document.querySelectorAll('.manifesto, .tour-heading, .feature-row, .split-heading, .proof-card, .models-copy, .models-visual, .extra-card, .workflow-steps li, .faq-heading')];
+let revealObserver;
+const configureReveals = () => {
+  revealObserver?.disconnect();
+  if (reducedMotion.matches || !('IntersectionObserver' in window)) {
+    revealElements.forEach(element => element.classList.remove('reveal-ready'));
+    return;
+  }
+  revealObserver = new IntersectionObserver(entries => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      entry.target.classList.add('is-visible');
+      revealObserver.unobserve(entry.target);
+    }
+  }, { threshold: 0.08 });
+  for (const element of revealElements) {
+    // Content already passed or visible remains visible on restoration/navigation.
+    if (element.getBoundingClientRect().top < innerHeight) continue;
+    element.classList.add('reveal-ready');
+    revealObserver.observe(element);
+  }
+};
+configureReveals();
+reducedMotion.addEventListener('change', configureReveals);
+
+// A restrained response to the pointer, never required to use the page.
+const heroScene = document.querySelector('.hero-scene');
+const precisePointer = matchMedia('(hover: hover) and (pointer: fine)');
+if (heroScene) {
+  let frame;
+  heroScene.addEventListener('pointermove', event => {
+    if (reducedMotion.matches || !precisePointer.matches) return;
+    cancelAnimationFrame(frame);
+    frame = requestAnimationFrame(() => {
+      const bounds = heroScene.getBoundingClientRect();
+      heroScene.style.setProperty('--move-x', `${((event.clientX - bounds.left) / bounds.width - 0.5) * 12}px`);
+      heroScene.style.setProperty('--move-y', `${((event.clientY - bounds.top) / bounds.height - 0.5) * 8}px`);
+    });
+  });
+  const resetScene = () => {
+    cancelAnimationFrame(frame);
+    heroScene.style.removeProperty('--move-x');
+    heroScene.style.removeProperty('--move-y');
+  };
+  heroScene.addEventListener('pointerleave', resetScene);
+  reducedMotion.addEventListener('change', resetScene);
+}

@@ -39,3 +39,15 @@ The browser size checks are saved in `docs/qa/layout.json`; a rendered first-scr
 - Verified mobile menu open/Escape close, hero CTA, tour tabs, ArrowRight/Home selection, screenshot enlargement/Escape close, and language switching while preserving the current section.
 - Regenerated and visually checked both 1200 × 630 Open Graph PNGs using the same hero markup and stylesheet. Temporary social pages are removed by the production build.
 - The T3 snapshot endpoint twice returned `Preview automation snapshot timed out after 15000ms`; visual and interaction checks therefore used Ego Lite. Layout measurements and desktop/mobile PNGs are saved under the Git-ignored `docs/qa/editorial-*` paths.
+
+## Two26-inspired complete redesign — 2026-10-27
+
+- Reference inspected at https://two26.studio/. Adapted its orange `#ff5400`, warm paper `#f8eee8`, blush `#f9e2e1`, cream `#fdf8f5`, oversized lettering and illustrated editorial direction to kepodo. No reference site illustrations, copy or proprietary fonts were reused.
+- Replaced the entire stylesheet and hero composition. Added a custom SVG reading companion, decorative document/idea cards, compact centered masthead, product window framing, contrasting section backgrounds, large feature stories, orange CTA and oversized footer. All substantive product behavior remains represented in English and Russian.
+- Self-hosted Unbounded variable font with its OFL license. Original app screenshots and provider icons are retained. Both Open Graph images regenerated at 1200 × 630 with the new design.
+- Browser checks in Ego Lite: EN/RU at 320, 390, 650, 768, 901, 1024, 1440 and 1920 CSS pixels. No horizontal page overflow or broken loaded assets. A Russian FAQ heading initially overflowed at 320px; shortened and rechecked successfully. QA output and screenshots are under ignored `docs/qa/two26-*` paths.
+- Verified mobile navigation open, Escape close and focus return; hero anchor; scenario tabs and ArrowRight/Home/End keyboard selection; screenshot dialog, Escape, focus return and body scroll restoration; FAQ expansion; EN/RU switching with the current hash preserved.
+- Verified `prefers-reduced-motion: reduce` disables ticker/entrance motion, restores native instant scrolling and leaves all reveal content visible. Scroll is never intercepted. Reveals use IntersectionObserver with readable HTML as the default.
+- T3 snapshot failed twice with `Preview automation snapshot timed out after 15000ms`; its resize setting also reported 390px while the actual viewport remained 1280px. Used Ego Lite for final visual and responsive inspection.
+- Large orange foreground lettering uses `#e94b00` (at least 3:1 on the warm backgrounds); orange surfaces retain the reference's `#ff5400`.
+- Final local and GitHub Pages base-path builds each passed all 6 existing tests; `git diff --check` passed. Changes remain in the local checkout.
