@@ -37,7 +37,7 @@ export function page(c,siteUrl='') {
     return `<button class="screenshot ${cls}" type="button" data-lightbox="${asset(c.lang,shot)}" aria-label="${e(c.zoom)}: ${e(alt)}"><img src="${asset(c.lang,shot)}" alt="${e(alt)}" width="${width}" height="${height}" ${priority?'fetchpriority="high" loading="eager"':'loading="lazy"'} decoding="async"><span class="zoom-hint">${icon('zoom')}</span></button>`;
   };
   const localeHref=(lang)=>`/${lang}/`;
-  const feature=(f,reverse=false)=>`<article class="feature-row ${reverse?'reverse':''}"><div class="feature-copy"><p class="eyebrow"><span class="chapter-number">${f.number}</span>${e(f.label)}</p><h3>${e(f.title).replace('\n','<br>')}</h3><p>${e(f.description)}</p><ul class="checklist">${f.points.map(s=>`<li>${icon('check')}<span>${e(s)}</span></li>`).join('')}</ul></div><figure class="feature-figure ${f.shot==='reading'?'reading-figure':'notes-figure'}">${screenshot(f.shot,f.alt)}<figcaption>${e(f.caption)}</figcaption></figure></article>`;
+  const feature=(f,reverse=false)=>`<article class="feature-row ${reverse?'reverse':''}"><div class="feature-copy"><p class="eyebrow">${e(f.label)}</p><h3>${e(f.title).replace('\n','<br>')}</h3><p>${e(f.description)}</p><ul class="checklist">${f.points.map(s=>`<li>${icon('check')}<span>${e(s)}</span></li>`).join('')}</ul></div><figure class="feature-figure ${f.shot==='reading'?'reading-figure':'notes-figure'}">${screenshot(f.shot,f.alt)}<figcaption>${e(f.caption)}</figcaption></figure></article>`;
   return `<!doctype html>
 <html lang="${c.lang}">
 <head>
@@ -60,18 +60,18 @@ export function page(c,siteUrl='') {
   <div class="header-end"><div class="language-switch" aria-label="${c.lang==='en'?'Language':'Язык'}"><a href="${e(local(localeHref('en')))}" lang="en" hreflang="en" ${c.lang==='en'?'aria-current="page"':''}>EN</a><span aria-hidden="true">/</span><a href="${e(local(localeHref('ru')))}" lang="ru" hreflang="ru" ${c.lang==='ru'?'aria-current="page"':''}>RU</a></div><a class="button button-small header-cta" href="#get-started">${e(c.get)}${icon('arrow-up-right')}</a><button class="menu-toggle icon-button" aria-label="${e(c.menu)}" aria-expanded="false" aria-controls="mobile-nav" data-open-label="${e(c.menu)}" data-close-label="${e(c.closeMenu)}">${icon('menu')}</button></div>
 </div><nav class="mobile-nav container" id="mobile-nav" aria-label="${c.lang==='en'?'Mobile navigation':'Мобильная навигация'}" hidden>${c.nav.map((s,i)=>`<a href="#${['features','how-it-works','models'][i]}">${e(s)}</a>`).join('')}<a href="#get-started">${e(c.get)} ${icon('arrow-up-right')}</a></nav></header>
 <main id="main">
-  <section class="hero container">
-    <div class="hero-copy"><p class="eyebrow hero-eyebrow"><span class="tiny-spark" aria-hidden="true">✳</span>${e(c.eyebrow)}</p>
+  <section class="hero">
+    <div class="hero-art" aria-hidden="true"><img src="${e(local('/assets/hero-collage.webp'))}" srcset="${e(local('/assets/hero-collage-960.webp'))} 960w, ${e(local('/assets/hero-collage.webp'))} 1774w" sizes="(max-width: 900px) 180vw, 90vw" alt="" width="1774" height="887" fetchpriority="high" decoding="async"></div>
+    <div class="hero-inner container"><div class="hero-copy"><p class="eyebrow hero-eyebrow"><span class="tiny-spark" aria-hidden="true">✳</span>${e(c.eyebrow)}</p>
     <h1>${e(c.headline[0])}<br><span>${e(c.headline[1])}</span></h1>
     <p class="hero-description">${e(c.intro)}</p>
     <div class="hero-actions"><a href="#tour" class="button">${e(c.primary)}${icon('arrow')}</a><a href="${repo}" ${ext} class="text-link">${e(c.secondary)}${icon('arrow-up-right')}</a></div>
-    <div class="hero-meta"><span>${icon('monitor')}${e(c.platform)}</span><span>${icon('file')}${e(c.format)}</span></div></div>
-    <div class="hero-mascot" aria-hidden="true"><span class="mascot-orbit"></span><img src="${e(local('/assets/squid.webp'))}" alt="" width="228" height="190"><span class="mascot-caption">${c.lang==='en'?'hello, curious mind.':'привет, любопытный ум.'}</span></div>
+    <div class="hero-meta"><span>${icon('monitor')}${e(c.platform)}</span><span>${icon('file')}${e(c.format)}</span></div></div></div>
   </section>
 
   <section id="tour" class="tour container" aria-label="${e(c.tourLabel)}" data-tabs>
     <div class="tour-topline"><p>${e(c.tourLabel)}</p><div class="tour-tabs" role="tablist" aria-label="${e(c.tourLabel)}">${c.tabs.map(t=>`<button role="tab" id="tab-${t.id}" aria-controls="panel-${t.id}" aria-selected="${t.id==='visual'}" tabindex="${t.id==='visual'?'0':'-1'}" data-tab="${t.id}">${icon(t.icon)}${e(t.label)}</button>`).join('')}</div></div>
-    <div class="tour-stage">${c.tabs.map(t=>`<div id="panel-${t.id}" role="tabpanel" aria-labelledby="tab-${t.id}" tabindex="0" ${t.id!=='visual'?'hidden':''}>${screenshot(t.id,t.alt,'tour-shot',t.id==='visual')}<div class="tour-explanation"><h2>${e(t.title)}</h2><p>${e(t.text)}</p><span class="tour-index" aria-hidden="true">0${c.tabs.indexOf(t)+1} / 03</span></div></div>`).join('')}</div>
+    <div class="tour-stage">${c.tabs.map(t=>`<div id="panel-${t.id}" role="tabpanel" aria-labelledby="tab-${t.id}" tabindex="0" ${t.id!=='visual'?'hidden':''}>${screenshot(t.id,t.alt,'tour-shot',t.id==='visual')}<div class="tour-explanation"><h2>${e(t.title)}</h2><p>${e(t.text)}</p></div></div>`).join('')}</div>
     <p class="screenshot-note">${e(c.screenshotNote)}</p>
     <ul class="conversation-features">${c.conversationFeatures.map(text=>`<li>${icon('check')}${e(text)}</li>`).join('')}</ul>
   </section>
@@ -92,7 +92,7 @@ export function page(c,siteUrl='') {
 
   <section class="extras-section container section-pad"><div class="section-heading compact"><p class="eyebrow">${e(c.extrasEyebrow)}</p><h2>${e(c.extrasTitle)}</h2></div><div class="extras-grid">${c.extras.map(f=>`<article class="extra-card">${icon(f.icon)}<h3>${e(f.title)}</h3><p>${e(f.text)}</p><button class="text-link" data-lightbox="${asset(c.lang,f.shot)}" data-alt="${e(f.alt)}">${e(c.viewScreen)}${icon('arrow-up-right')}</button></article>`).join('')}</div></section>
 
-  <section id="how-it-works" class="workflow-section section-pad"><div class="container"><div class="section-heading"><p class="eyebrow">${e(c.workflowEyebrow)}</p><h2>${e(c.workflowTitle)}</h2></div><ol class="workflow-steps">${c.steps.map((s,i)=>`<li><span class="step-number">0${i+1}</span><h3>${e(s.title)}</h3><p>${e(s.text)}</p></li>`).join('')}</ol><aside class="privacy-note">${icon('shield')}<div><h3>${e(c.privacyTitle)}</h3><p>${e(c.privacyText)}</p></div></aside></div></section>
+  <section id="how-it-works" class="workflow-section section-pad"><div class="container"><div class="section-heading"><p class="eyebrow">${e(c.workflowEyebrow)}</p><h2>${e(c.workflowTitle)}</h2></div><ol class="workflow-steps">${c.steps.map(s=>`<li><h3>${e(s.title)}</h3><p>${e(s.text)}</p></li>`).join('')}</ol><aside class="privacy-note">${icon('shield')}<div><h3>${e(c.privacyTitle)}</h3><p>${e(c.privacyText)}</p></div></aside></div></section>
 
   <section class="faq-section container section-pad"><div class="faq-heading"><p class="eyebrow">${e(c.faqEyebrow)}</p><h2>${e(c.faqTitle)}</h2><img class="faq-mascot" src="${e(local('/assets/squid.webp'))}" alt="" width="100" height="84" loading="lazy"></div><div class="faq-list">${c.faq.map((f,i)=>`<details name="faq"><summary>${e(f.q)}${icon('plus')}</summary><div class="faq-answer"><p>${e(f.a)}</p>${i===4?`<a class="text-link" href="${repo}#запуск" ${ext}>${e(c.ctaGuide)}${icon('arrow-up-right')}</a>`:''}</div></details>`).join('')}</div></section>
 
