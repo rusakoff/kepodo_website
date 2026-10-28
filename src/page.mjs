@@ -21,6 +21,7 @@ const paths = {
   zoom:'<circle cx="10" cy="10" r="6"/><path d="m15 15 6 6M7 10h6m-3-3v6"/>',
   x:'<path d="m6 6 12 12M6 18 18 6"/>',
   menu:'<path d="M4 7h16M4 17h16"/>',
+  play:'<path d="m9 5 11 7-11 7Z" fill="currentColor" stroke="none"/>',
   github:'<path d="M9 19c-5 1-5-2-7-2m14 5v-4a3 3 0 0 0-.9-2.3c3-.3 5.9-1.5 5.9-6.7a5.2 5.2 0 0 0-1.4-3.6 4.9 4.9 0 0 0-.1-3.6S18.4 1.5 15.8 3a13.2 13.2 0 0 0-7.6 0C5.6 1.5 4.5 1.8 4.5 1.8a4.9 4.9 0 0 0-.1 3.6A5.2 5.2 0 0 0 3 9c0 5.2 2.9 6.4 5.9 6.7A3 3 0 0 0 8 18v4"/>',
 };
 export const icon = (name,cls='') => `<svg class="icon ${cls}" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name]||paths.arrow}</svg>`;
@@ -67,14 +68,16 @@ export function page(c,siteUrl='') {
         <h1><span class="headline-line">${e(c.headline[0])}</span><span class="headline-line">${e(c.headline[1])}</span></h1>
         <span class="sticker sticker-left">${e(c.heroStickers[0])}</span><span class="sticker sticker-right">${e(c.heroStickers[1])}</span>
       </div>
-      <div class="hero-scene" aria-hidden="true">
-        <svg class="scene-swoop swoop-left" viewBox="0 0 190 240" fill="none"><path d="M-45 42C36-12 160 54 135 126 118 173 12 148 19 97 28 31 163 140 133 231" stroke="currentColor" stroke-width="12" stroke-linecap="round"/></svg>
-        <svg class="scene-swoop swoop-right" viewBox="0 0 190 240" fill="none"><path d="M168 4C54 9 46 140 109 128 163 117 117 38 40 88-7 120 23 184 69 205m-30-4 32 7-6-31" stroke="currentColor" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <div class="thought-paper"><div class="paper-bar">${icon('file')}<span>${e(c.heroDocument)}</span><span>↗</span></div><div class="paper-lines"><i></i><i></i><i class="highlight"></i><i></i><i></i></div><p>${e(c.heroQuestion)}</p><span class="paper-corner">.md</span></div>
-        <div class="companion-wrap"><img class="hero-companion" src="${e(local('/assets/reading-companion.svg'))}" width="460" height="360" alt="" fetchpriority="high"><span class="companion-caption">${e(c.footerNote)}</span></div>
-        <div class="insight-paper"><span class="insight-spark">✳</span><p>${e(c.heroAnswer)}</p><div class="idea-map"><span>${e(c.heroNodes[0])}</span><b>↘</b><span>${e(c.heroNodes[1])}</span><b>↙</b><span>${e(c.heroNodes[2])}</span></div></div>
-        <span class="scene-asterisk">✳</span>
-      </div>
+      <figure class="hero-showreel">
+        <div class="showreel-frame">
+          <video id="hero-video" controls playsinline preload="none" width="1920" height="1080" poster="${e(local('/assets/videos/kepodo-showreel-'+c.lang+'.webp'))}" aria-label="${e(c.videoTitle)}">
+            <source src="${e(local('/assets/videos/kepodo-showreel-'+c.lang+'.mp4'))}" type="video/mp4">
+            <a href="${e(local('/assets/videos/kepodo-showreel-'+c.lang+'.mp4'))}">${e(c.videoOpen)}</a>
+          </video>
+          <button class="showreel-play" type="button" aria-controls="hero-video" hidden>${icon('play')}<span>${e(c.videoPlay)}</span><span class="showreel-duration" aria-hidden="true">0:28</span></button>
+        </div>
+        <figcaption><span>${e(c.videoTitle)}</span><a href="${e(local('/assets/videos/kepodo-showreel-'+c.lang+'.mp4'))}" ${ext}>${e(c.videoOpen)}${icon('arrow-up-right')}</a></figcaption>
+      </figure>
       <div class="hero-bottom"><p class="hero-description">${e(c.intro)}</p><div class="hero-actions"><a href="#tour" class="button">${e(c.primary)}${icon('arrow-up-right')}</a><a href="${repo}" ${ext} class="text-link">${e(c.secondary)}${icon('arrow-up-right')}</a></div><div class="hero-meta"><span>${icon('monitor')}${e(c.platform)}</span><span>${icon('file')}${e(c.format)}</span></div></div>
     </div>
   </section>

@@ -24,7 +24,7 @@ for(const lang of ['en','ru']){
     assert.equal(ids.length,new Set(ids).size,'IDs must be unique');
     for(const [,target] of html.matchAll(/href="#([^"]+)"/g))assert.ok(ids.includes(target),`Missing #${target}`);
     for(const [,target] of html.matchAll(/aria-controls="([^"]+)"/g))assert.ok(ids.includes(target),`Missing controlled element ${target}`);
-    const assets=new Set([...html.matchAll(/(?:src|href|data-lightbox)="(\/[^"#?]+)"/g)].map(m=>m[1]));
+    const assets=new Set([...html.matchAll(/(?:src|href|poster|data-lightbox)="(\/[^"#?]+)"/g)].map(m=>m[1]));
     for(const asset of assets){
       await access(outputPath(asset));
     }
@@ -38,6 +38,9 @@ for(const lang of ['en','ru']){
       assert.match(tag,/\balt="[^"]*"/);
       assert.match(tag,/\bwidth="\d+"/);assert.match(tag,/\bheight="\d+"/);
     }
+    assert.match(html,new RegExp(`/assets/videos/kepodo-showreel-${lang}\\.mp4`));
+    assert.match(html,new RegExp(`poster="[^"]*/assets/videos/kepodo-showreel-${lang}\\.webp"`));
+    assert.match(html,/<video\b[^>]*controls[^>]*playsinline[^>]*preload="none"/);
     assert.ok(!/href="(?:#|javascript:)["]/.test(html));
     assert.ok(!/\b(?:TODO|Lorem ipsum|undefined)\b/.test(html));
     assert.match(html,/hreflang="en"/);assert.match(html,/hreflang="ru"/);
@@ -59,7 +62,7 @@ test('GitHub Pages project URLs include the base path for every local resource',
   const url='https://test.invalid/kepodo_website';
   for(const lang of ['en','ru']){
     const html=page(content[lang],url);
-    const paths=[...html.matchAll(/(?:href|src|data-lightbox)="(\/[^"#]+)"/g)].map(m=>m[1]);
+    const paths=[...html.matchAll(/(?:href|src|poster|data-lightbox)="(\/[^"#]+)"/g)].map(m=>m[1]);
     assert.ok(paths.length>20);
     assert.ok(paths.every(path=>path.startsWith('/kepodo_website/')));
     assert.ok(html.includes(`rel="canonical" href="${url}/${lang}/"`));

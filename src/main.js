@@ -105,25 +105,20 @@ const configureReveals = () => {
 configureReveals();
 reducedMotion.addEventListener('change', configureReveals);
 
-// A restrained response to the pointer, never required to use the page.
-const heroScene = document.querySelector('.hero-scene');
-const precisePointer = matchMedia('(hover: hover) and (pointer: fine)');
-if (heroScene) {
-  let frame;
-  heroScene.addEventListener('pointermove', event => {
-    if (reducedMotion.matches || !precisePointer.matches) return;
-    cancelAnimationFrame(frame);
-    frame = requestAnimationFrame(() => {
-      const bounds = heroScene.getBoundingClientRect();
-      heroScene.style.setProperty('--move-x', `${((event.clientX - bounds.left) / bounds.width - 0.5) * 12}px`);
-      heroScene.style.setProperty('--move-y', `${((event.clientY - bounds.top) / bounds.height - 0.5) * 8}px`);
+// The native player works without JS; this is only the branded play affordance.
+const heroVideo = document.getElementById('hero-video');
+const videoPlay = document.querySelector('.showreel-play');
+if (heroVideo && videoPlay) {
+  videoPlay.hidden = false;
+  videoPlay.addEventListener('click', () => {
+    heroVideo.play().catch(() => {
+      // Native controls and the direct video link remain available if playback fails.
+      videoPlay.hidden = false;
     });
   });
-  const resetScene = () => {
-    cancelAnimationFrame(frame);
-    heroScene.style.removeProperty('--move-x');
-    heroScene.style.removeProperty('--move-y');
-  };
-  heroScene.addEventListener('pointerleave', resetScene);
-  reducedMotion.addEventListener('change', resetScene);
+  heroVideo.addEventListener('play', () => {
+    if (document.activeElement === videoPlay) heroVideo.focus({ preventScroll: true });
+    videoPlay.hidden = true;
+  });
+  heroVideo.addEventListener('ended', () => { videoPlay.hidden = false; });
 }

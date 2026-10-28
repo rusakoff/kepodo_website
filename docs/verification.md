@@ -51,3 +51,11 @@ The browser size checks are saved in `docs/qa/layout.json`; a rendered first-scr
 - T3 snapshot failed twice with `Preview automation snapshot timed out after 15000ms`; its resize setting also reported 390px while the actual viewport remained 1280px. Used Ego Lite for final visual and responsive inspection.
 - Large orange foreground lettering uses `#e94b00` (at least 3:1 on the warm backgrounds); orange surfaces retain the reference's `#ff5400`.
 - Final local and GitHub Pages base-path builds each passed all 6 existing tests; `git diff --check` passed. Changes remain in the local checkout.
+
+## Localized hero videos — 2026-10-28
+
+- Replaced the hero illustration with the supplied English and Russian 1920 × 1080 showreels. Both are about 28 seconds with audio. Remuxed with MP4 fast-start metadata without re-encoding; localized WebP posters come from each original video.
+- Playback starts on click, with native controls and inline mobile playback. `preload="none"` prevents eager video downloads; the browser recorded no MP4 request before playback. Native controls and a direct media link remain available without JavaScript.
+- Verified actual playback for both languages in T3, including English at 390px, and verified seeking to 20 seconds. The local server streams MP4 files with byte-range support; full HEAD, bounded, suffix, and open-ended ranges returned the expected headers, while unsatisfiable ranges returned 416.
+- Checked EN/RU at 320, 390, 768, and 1440 CSS pixels in Ego Lite after T3 snapshots twice returned `Preview automation snapshot timed out after 15000ms`. No page or headline overflow; videos retain their 16:9 aspect ratio. QA measurements and desktop/mobile screenshots are under ignored `docs/qa/video-*` paths.
+- Updated both 1200 × 630 social previews to use the localized video posters. Both local and GitHub Pages base-path builds passed all 6 tests, including localized video/poster paths. Changes remain local.
