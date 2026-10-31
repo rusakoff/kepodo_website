@@ -17,14 +17,14 @@ const outputPath=pathname=>{
 for(const lang of ['en','ru']){
   test(`${lang}: localized static content, working anchors and available assets`,async()=>{
     const html=await readFile(join(dist,lang,'index.html'),'utf8');
-    assert.ok(html.includes(`<html lang="${lang}">`));
+    assert.match(html, new RegExp(`<html lang="${lang}"(?: [^>]*)?>`));
     assert.ok(html.includes(`<title>${escapeHtml(content[lang].title)}</title>`));
     assert.equal((html.match(/<h1>/g)||[]).length,1);
     const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
     assert.equal(ids.length,new Set(ids).size,'IDs must be unique');
     for(const [,target] of html.matchAll(/href="#([^"]+)"/g))assert.ok(ids.includes(target),`Missing #${target}`);
     for(const [,target] of html.matchAll(/aria-controls="([^"]+)"/g))assert.ok(ids.includes(target),`Missing controlled element ${target}`);
-    const assets=new Set([...html.matchAll(/(?:src|href|poster|data-lightbox)="(\/[^"#?]+)"/g)].map(m=>m[1]));
+    const assets=new Set([...html.matchAll(/(?:src|href|poster|data-lightbox(?:-light|-dark)?|data-src-(?:light|dark))="(\/[^"#?]+)"/g)].map(m=>m[1]));
     for(const asset of assets){
       await access(outputPath(asset));
     }
@@ -44,12 +44,20 @@ for(const lang of ['en','ru']){
     assert.ok(!/href="(?:#|javascript:)["]/.test(html));
     assert.ok(!/\b(?:TODO|Lorem ipsum|undefined)\b/.test(html));
     assert.match(html,/hreflang="en"/);assert.match(html,/hreflang="ru"/);
-    assert.equal((html.match(/<details name="faq">/g)||[]).length,6);
+    assert.equal((html.match(/<details name="faq">/g)||[]).length,content[lang].faq.length);
   });
 }
 test('both languages cover the same product features',()=>{
-  for(const key of ['tabs','proof','extras'])assert.deepEqual(content.en[key].map(item=>item.id),content.ru[key].map(item=>item.id));
+  for(const key of ['tabs'])assert.deepEqual(content.en[key].map(item=>item.id),content.ru[key].map(item=>item.id));
   assert.deepEqual(Object.keys(content.en),Object.keys(content.ru));
+  for (const lang of ['en','ru']) {
+    const c = content[lang];
+    const tabIds = new Set(c.tabs.map(tab => tab.id));
+    assert.ok(c.cases.every(item => tabIds.has(item.tab)), 'Every scenario must have an available demo');
+    assert.equal(c.connectionColumns.length, 3);
+    assert.equal(c.specsHeaders.length, c.specsValues.length, 'Each supported-format value needs a column label');
+  }
+
 });
 test('root is the English landing page, with a separate 404',async()=>{
   assert.equal(await readFile(join(dist,'index.html'),'utf8'),await readFile(join(dist,'en/index.html'),'utf8'));
@@ -62,7 +70,7 @@ test('GitHub Pages project URLs include the base path for every local resource',
   const url='https://test.invalid/kepodo_website';
   for(const lang of ['en','ru']){
     const html=page(content[lang],url);
-    const paths=[...html.matchAll(/(?:href|src|poster|data-lightbox)="(\/[^"#]+)"/g)].map(m=>m[1]);
+    const paths=[...html.matchAll(/(?:href|src|poster|data-lightbox(?:-light|-dark)?|data-src-(?:light|dark))="(\/[^"#]+)"/g)].map(m=>m[1]);
     assert.ok(paths.length>20);
     assert.ok(paths.every(path=>path.startsWith('/kepodo_website/')));
     assert.ok(html.includes(`rel="canonical" href="${url}/${lang}/"`));

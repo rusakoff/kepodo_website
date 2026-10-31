@@ -16,6 +16,7 @@ const require = createRequire(join(appRoot, 'package.json'));
 const { _electron: electron, expect } = require('@playwright/test');
 const output = join(root, 'public/assets/screenshots');
 const originals = join(root, '.captures');
+const darkCapture = process.argv.includes('--dark');
 await mkdir(output, { recursive: true });
 await mkdir(originals, { recursive: true });
 
@@ -79,15 +80,17 @@ for (const locale of ['en','ru']) {
     const tab=(name)=>page.getByRole('tab',{name,exact:true});
     const resize=async(w,h)=>{await app.evaluate(({BrowserWindow},{w,h})=>BrowserWindow.getAllWindows()[0].setContentSize(w,h),{w,h});await expect.poll(()=>page.evaluate(()=>innerWidth)).toBe(w);};
     const shot=async(name,locator)=>{
+      if (darkCapture && !['reading','summary','visual','understand','proposal','notes','connections','dark'].includes(name)) return;
+      const fileName = darkCapture && name !== 'dark' ? `${name}-dark` : name;
       if (!process.argv.includes('--force')) {
-        try { await access(join(output,`${locale}-${name}.webp`)); return; } catch {}
+        try { await access(join(output,`${locale}-${fileName}.webp`)); return; } catch {}
       }
       await page.evaluate(()=>document.fonts.ready);
       await page.waitForTimeout(350);
-      const png=join(originals,`${locale}-${name}.png`);
+      const png=join(originals,`${locale}-${fileName}.png`);
       await (locator||page).screenshot({path:png,animations:'disabled'});
-      execFileSync('rtk',['proxy','cwebp','-quiet','-q','88',png,'-o',join(output,`${locale}-${name}.webp`)]);
-      console.log(`Captured ${locale}/${name}`);
+      execFileSync('rtk',['proxy','cwebp','-quiet','-q','88',png,'-o',join(output,`${locale}-${fileName}.webp`)]);
+      console.log(`Captured ${locale}/${fileName}`);
     };
     const fresh=async()=>{await button(c.create).click();await page.getByRole('menuitem',{name:c.newChat,exact:true}).click();await expect(page.locator('[data-slot="aui_assistant-message-root"]')).toHaveCount(0);};
     const ask=async(next,text)=>{
@@ -104,6 +107,12 @@ for (const locale of ['en','ru']) {
       await page.waitForTimeout(500);
     };
     await expect(button(c.open)).toBeVisible();
+    if (darkCapture) {
+      await button(c.settings).click();
+      await page.getByRole('combobox',{name:c.theme,exact:true}).click();
+      await page.getByRole('option',{name:c.dark,exact:true}).click();
+      await button(c.close).click();
+    }
     await resize(760,850);await shot('welcome');
     await app.evaluate(({dialog},path)=>{dialog.showOpenDialog=async()=>({canceled:false,filePaths:[path]});},docPath);
     await button(c.open).click();await expect(page.getByTestId('document-sheet')).toBeVisible();
@@ -115,7 +124,7 @@ for (const locale of ['en','ru']) {
     await button(c.settings).click();await page.getByRole('combobox',{name:c.theme,exact:true}).click();
     await page.getByRole('option',{name:c.dark,exact:true}).click();await button(c.close).click();await shot('dark');
     await button(c.settings).click();await page.getByRole('combobox',{name:c.theme,exact:true}).click();
-    await page.getByRole('option',{name:c.light,exact:true}).click();await button(c.close).click();
+    await page.getByRole('option',{name:darkCapture?c.dark:c.light,exact:true}).click();await button(c.close).click();
     await fresh();await ask('understand',c.understandQuestion);await shot('understand');
     await fresh();await ask('proposal',c.proposalQuestion);await shot('proposal');
     await button(c.history).click();await shot('history');await page.keyboard.press('Escape');
